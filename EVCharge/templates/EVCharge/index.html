@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> EVCharge: EV page </title>
+	<style>
+	#header {
+    	background-color:#aaaaaa;
+    	color:white;
+    	text-align:center;
+    	padding:5px;
+	}
+	#nav {
+    	line-height:30px;
+    	background-color:#eeeeee;
+    	height:700px;
+    	width:100px;
+    	float:left;
+    	padding:5px;	      
+	}
+	#section {
+		width:auto;
+    	float:left;
+    	text-align:center;
+    	padding:10px;	 	 
+	}
+	#footer {
+    	background-color:#555555;
+    	color:white;
+    	clear:both;
+    	text-align:center;
+   		padding:5px;	 	 
+	}
+	</style>
+</head>
+
+<body>
+<div id="header">
+	<h1>Welcome to Electrical Vehicle Charging Station!</h1>
+</div>
+
+<div id="nav">
+	<a href="">Setting</a><br>
+	<a href="">Register</a><br>
+	<a href="">Back</a><br>
+</div>
+
+<div id="section">
+	<h3>Please input your car ID: <br></h3>
+	<textarea rows="1" cols="50" id="carid"></textarea><br>
+	<button type="button" onclick="javascript:location.href = 'ev/'+document.getElementById('carid').value">Enter</button>
+
+</div>
+
+<div id="footer">
+Copyright @ EE135 Project winter 2015 by Haixiang Xu
+
+</div>
+
+</body>
+
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> EVCharge: EV page </title>
+	<style>
+	#header {
+    	background-color:#aaaaaa;
+    	color:white;
+    	text-align:center;
+    	padding:5px;
+	}
+	#nav {
+    	line-height:30px;
+    	background-color:#eeeeee;
+    	height:700px;
+    	width:100px;
+    	float:left;
+    	padding:5px;	      
+	}
+	#section {
+		width:auto;
+    	float:left;
+    	text-align:center;
+    	padding:10px;	 	 
+	}
+	#footer {
+    	background-color:#555555;
+    	color:white;
+    	clear:both;
+    	text-align:center;
+   		padding:5px;	 	 
+	}
+	</style>
+</head>
+
+<body>
+<div id="header">
+	<h1>Welcome to Electrical Vehicle Charging Station!</h1>
+</div>
+
+<div id="nav">
+	<a href="../">Setting</a><br>
+	<a href="../">Register</a><br>
+	<a href="../">Back</a><br>
+</div>
+
+<div id="section">
+	
+	{% if car %}
+	<img src={{ car.imageLink }} alt={{car.make}} {{car.model}} style="width:500px;height:300px;"></img><br>
+    <ul>
+    <li i>{{ car.carID }}</a></li>
+    </ul>
+    <p>Current time: show time here</p>
+	<p>User ID: <textarea rows="1" cols="10" id="userID"></textarea></p>
+	<p>Expected duration of stay: <textarea rows="1" cols="10" id="duration"></textarea></p>
+	<p>Expected travel distance: <textarea rows="1" cols="10" id="distance"></textarea></p>
+	<button type="button" onclick="javascript:location.href = document.getElementById('carID').value+'/'+document.getElementById('userID').value+'/charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
+	{% else %}
+    <p>No registered cars are available.</p>
+    <p>Please register to continue.</p>
+    <p>Current time: show time here</p>
+	<p>User ID: <textarea disabled rows="1" cols="10" id="userID"></textarea></p>
+	<p>Expected duration of stay: <textarea disabled rows="1" cols="10" id="duration"></textarea></p>
+	<p>Expected travel distance: <textarea disabled rows="1" cols="10" id="distance"></textarea></p>
+	<button type="button" disabled onclick="javascript:location.href = charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
+	{% endif %}
+
+
+</div>
+
+<div id="footer">
+Copyright @ EE135 Project winter 2015 by Haixiang Xu
+
+</div>
+
+</body>
+
+
+</html>
