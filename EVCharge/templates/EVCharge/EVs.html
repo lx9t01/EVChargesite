@@ -48,14 +48,13 @@
 	
 	{% if car %}
 	<img src={{ car.imageLink }} alt={{car.make}} {{car.model}} style="width:500px;height:300px;"></img><br>
-    <ul>
-    <li i>{{ car.carID }}</a></li>
-    </ul>
-    <p>Current time: show time here</p>
+	<p><textarea disabled rows="1" cols="10" id = "mycarID"> {{car.carID}} </textarea></p>
+    <p>Current time: </p>
+    <p id = 'now'>Current time: </p>
 	<p>User ID: <textarea rows="1" cols="10" id="userID"></textarea></p>
 	<p>Expected duration of stay: <textarea rows="1" cols="10" id="duration"></textarea></p>
 	<p>Expected travel distance: <textarea rows="1" cols="10" id="distance"></textarea></p>
-	<button type="button" onclick="javascript:location.href = document.getElementById('carID').value+'/'+document.getElementById('userID').value+'/charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
+	<button type="button" onclick="javascript:location.href = document.getElementById('mycarID').value.replace(/ /g,'')+'/'+document.getElementById('userID').value+'/charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
 	{% else %}
     <p>No registered cars are available.</p>
     <p>Please register to continue.</p>
@@ -63,8 +62,11 @@
 	<p>User ID: <textarea disabled rows="1" cols="10" id="userID"></textarea></p>
 	<p>Expected duration of stay: <textarea disabled rows="1" cols="10" id="duration"></textarea></p>
 	<p>Expected travel distance: <textarea disabled rows="1" cols="10" id="distance"></textarea></p>
-	<button type="button" disabled onclick="javascript:location.href = charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
+	<button type="button" disabled onclick="javascript:location.href = document.getElementById('mycarID').value.replace(/ /g,'')+'/'+document.getElementById('userID').value+'/charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
 	{% endif %}
+	<script>
+	document.getElementById("now").innerHTML = Date();
+	</script>
 
 
 </div>

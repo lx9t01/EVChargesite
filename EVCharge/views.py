@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template import loader
 import datetime
 from random import randint
+from sklearn import tree
 
 def index(request):
     template = loader.get_template('EVCharge/index.html')
@@ -28,7 +29,17 @@ def charging(request, car_id, user_id, duration, distance):
     client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
     db = client['evdb']
     carCollection = db['car']
+    historyCollection = db['history']
     
+    my_car = carCollection.find_one({"carID": car_id})
+    
+    train_data = historyCollection.find_one({"carID": car_id, "userID": user_id})
+    context = {
+        'car': my_car,
+        'userID': user_id,
+        'duration': duration,
+        'distance': distance,
+    }
     template = loader.get_template('EVCharge/charging.html')
     return HttpResponse(template.render(context, request))
     
@@ -42,6 +53,7 @@ car1 = {'carID': 'A000001',
         'milePerKWh': 3.00,
         'maxRate': 1.5,
         'imageLink': '/static/Tesla-Model-X.jpg',
+        'prediction_model': 'clf1',
 }
 
 historyCollection = db['history']
@@ -65,14 +77,28 @@ def populate():
     client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
     db = client['evdb']
     carCollection = db['car']
-    car1 = {'carID': 'A000002',
+    car1 = {'carID': 'A000001',
         'make': 'Tesla',
         'model': 'Model S',
         'milePerKWh': 3.00,
         'maxRate': 1.5,
         'imageLink': '/static/Tesla-Model-S1.jpg',
+        'prediction_model': trainmodel('A000001'),
         }
     uoload_id = carCollection.insert_one(car1).inserted_id
+
+def train_model(carID):
+    client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
+    db = client['evdb']
+    historyCollection = db['history']
+    
+    train_data = historyCollection.find_one({"carID": carID})
+    
+    print(train_data)
+    print(carID)
+    
+    clf = tree.DecisionTreeRegressor(min_samples_leaf=5)
+    return clf
 
 
 def populate_history(carID='A000002', userID='2017496'):

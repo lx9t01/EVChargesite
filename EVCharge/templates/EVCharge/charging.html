@@ -39,19 +39,30 @@
 </div>
 
 <div id="nav">
-	<a href="index.html">Setting</a><br>
-	<a href="index.html">Register</a><br>
-	<a href="index.html">Back</a><br>
+	<a href="../../../../..">Setting</a><br>
+	<a href="../../../../..">Register</a><br>
+	<a href="../../../../..">Back</a><br>
 </div>
 
 <div id="section">
-	<img src="img/Tesla-Model-S1.jpg" alt="Tesla Model S" style="width:400px;height:245px;"></img><br>
-	<img src="img/charging.png" alt="EV is charging..." style="width:128px;height:128px;"></img><br>
-	<p>Start time: the start time goes here</p>
-	<p>Expected duration of stay: the expected duration goes here</p>
-	<p>Expected travel distance: the expected distance goes here</p>
+	<img src={{ car.imageLink }} alt={{car.make}} {{car.model}} style="width:500px;height:300px;"></img><br>
+	<img src="/static/charging.png" alt="EV is charging..." style="width:128px;height:128px;"></img><br>
+	<p>Your charge starts at: </p>
+	<p id = 'now'></p>
+	<p>Expected duration of stay: {{duration}}</p>
+	<p>Expected travel distance: {{distance}}</p>
 	<p>The predicted charge duration: the predicted charge time goes here</p>
-	<button type="button" onclick="alert('Disconnected!')">Disconnect</button>
+	<button type="button" onclick="disconnectFunc()">Disconnect</button>
+	<script>
+	document.getElementById("now").innerHTML = Date();
+	</script>
+	<script>
+	function disconnectFunc() {
+		alert('Disconnected! Have a pleasant journey.');
+
+	}
+	</script>
+	
 
 </div>
 
