@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from pymongo import MongoClient
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template import loader
 import datetime
 from random import randint
@@ -9,9 +9,7 @@ from sklearn import tree
 
 def index(request):
     template = loader.get_template('EVCharge/index.html')
-    print(request.POST.get('carid'))
-    if request.POST.get('carid')!=None and request.POST.get('userid')!=None and request.POST.get('si')!=None and request.POST.get('ei')!=None and request.POST.get('ri')!=None and request.POST.get('durexp')!=None:
-        insertHistory(request.POST.get('carid'), request.POST.get('userid'), request.POST.get('si'), datetime.datetime.now(), request.POST.get('ei'), request.POST.get('ri'), request.POST.get('durexp'))
+    
     return HttpResponse(template.render(request))
 
 def ev(request, car_id):
@@ -27,6 +25,18 @@ def ev(request, car_id):
         'car':result,
     }
     return HttpResponse(template.render(context, request))
+
+def processing(request):
+    print(request.GET.get('carid'))
+    if request.GET.get('carid')!=None and request.GET.get('userid')!=None and request.GET.get('si')!=None and request.GET.get('ei')!=None and request.GET.get('ri')!=None and request.GET.get('durexp')!=None:
+        print(request.POST.get('carid'))
+        print(request.POST.get('userid'))
+        print(request.POST.get('si'))
+        print(request.POST.get('ei'))
+        print(request.POST.get('ri'))
+        print(request.POST.get('durexp'))
+        insertHistory(request.GET.get('carid'), request.GET.get('userid'), request.GET.get('si'), datetime.datetime.now(), request.GET.get('ei'), request.GET.get('ri'), request.GET.get('durexp'))
+        return HttpResponseRedirect("/EVCharge")
 
 def charging(request, car_id, user_id, duration, distance):
     client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')

@@ -59,9 +59,9 @@
     <p>No registered cars are available.</p>
     <p>Please register to continue.</p>
     <p>Current time: show time here</p>
-	<p>User ID: <textarea disabled rows="1" cols="10" id="userID"></textarea></p>
-	<p>Expected duration of stay: <textarea disabled rows="1" cols="10" id="duration"></textarea></p>
-	<p>Expected travel distance: <textarea disabled rows="1" cols="10" id="distance"></textarea></p>
+	<p>User ID: <textarea disabled rows="1" cols="10" id="userID" value="100"></textarea></p>
+	<p>Expected duration of stay: <textarea disabled rows="1" cols="10" id="duration" value="10"></textarea></p>
+	<p>Expected travel distance: <textarea disabled rows="1" cols="10" id="distance" value="100"></textarea></p>
 	<button type="button" disabled onclick="javascript:location.href = document.getElementById('mycarID').value.replace(/ /g,'')+'/'+document.getElementById('userID').value+'/charging/'+document.getElementById('duration').value+'/'+document.getElementById('distance').value">Confirm and Charge!</button>
 	{% endif %}
 	<script>
