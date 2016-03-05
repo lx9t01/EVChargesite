@@ -9,6 +9,9 @@ from sklearn import tree
 
 def index(request):
     template = loader.get_template('EVCharge/index.html')
+    print(request.POST.get('carid'))
+    if request.POST.get('carid')!=None and request.POST.get('userid')!=None and request.POST.get('si')!=None and request.POST.get('ei')!=None and request.POST.get('ri')!=None and request.POST.get('durexp')!=None:
+        insertHistory(request.POST.get('carid'), request.POST.get('userid'), request.POST.get('si'), datetime.datetime.now(), request.POST.get('ei'), request.POST.get('ri'), request.POST.get('durexp'))
     return HttpResponse(template.render(request))
 
 def ev(request, car_id):
@@ -86,6 +89,21 @@ def populate():
         'prediction_model': trainmodel('A000001'),
         }
     uoload_id = carCollection.insert_one(car1).inserted_id
+
+def insertHistory(carid, userid, si, ti, ei, ri, duration_exp):
+    client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
+    db = client['evdb']
+    carCollection = db['history']
+    car1 = {'carID': carid,
+        'userID': userid,
+        'si': si,
+        'ti': ti,
+        'ei': ei,
+        'ri': ri,
+        'duration_exp': duration_exp,
+        }
+    upload_id = carCollection.insert_one(car1).inserted_id
+    return upload_id
 
 def train_model(carID):
     client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')

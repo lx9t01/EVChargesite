@@ -52,14 +52,28 @@
 	<p>Expected duration of stay: {{duration}}</p>
 	<p>Expected travel distance: {{distance}}</p>
 	<p>The predicted charge duration: the predicted charge time goes here</p>
+	<form action="index.html">
+      <input type="hidden" name="carid", value=>
+      <input type="hidden" name="userid" value=>
+      <input type="hidden" name="si" value=>
+      <input type="hidden" name="ei" value=>
+      <input type="hidden" name="ri" value=>
+      <input type="hidden" name="durexp" value=>
+      <input type="submit" value="Disconnect">
+    </form>
 	<button type="button" onclick="disconnectFunc()">Disconnect</button>
 	<script>
 	document.getElementById("now").innerHTML = Date();
 	</script>
 	<script>
 	function disconnectFunc() {
-		alert('Disconnected! Have a pleasant journey.');
-
+		var form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '../../');
+        form.style.display = 'hidden';
+        document.body.appendChild(form)
+        form.appendChild()
+        form.submit();
 	}
 	</script>
 	
