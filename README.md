@@ -1,6 +1,6 @@
 # EVChargesite
-##This site is designed for EV Charge facility's interface with backend database
-##The interface consists of 3 functional pages, namely index, EVCharge and Charging
+#### This site is designed for EV Charge facility's interface with backend database
+#### The interface consists of 3 functional pages, namely index, EVCharge and Charging
 
 ## index: 
 1. index is the main page and homepage.
@@ -25,7 +25,7 @@
 
 ## Charging: 
 Charging is the site where we set all the parameters and the charge begins.
-### When we want to drive out the EV, a disconnect signal should be sent to our server, and this charging period ends. The data of today should be uploaded to our server as well,
+#### When we want to drive out the EV, a disconnect signal should be sent to our server, and this charging period ends. The data of today should be uploaded to our server as well,
 
 ## Other supporting systems: 
 * Machine learning algorithm to train on history data;
