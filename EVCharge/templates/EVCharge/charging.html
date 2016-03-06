@@ -51,7 +51,7 @@
 	<p id = 'now'></p>
 	<p>Expected duration of stay: {{duration}}</p>
 	<p>Expected travel distance: {{distance}}</p>
-	<p>The predicted charge duration: the predicted charge time goes here</p>
+	<p>The predicted charge duration: {{prediction}}</p>
 	<form action="/EVCharge/processing" method="get">
       <input type="hidden" name="carid", value={{car.carID}}>
       <input type="hidden" name="userid" value={{userID}}>

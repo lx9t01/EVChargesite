@@ -7,6 +7,7 @@ import datetime
 from random import randint
 from sklearn import tree
 
+
 def index(request):
     template = loader.get_template('EVCharge/index.html')
     
@@ -35,7 +36,11 @@ def processing(request):
         print(request.POST.get('ei'))
         print(request.POST.get('ri'))
         print(request.POST.get('durexp'))
-        insertHistory(request.GET.get('carid'), request.GET.get('userid'), request.GET.get('si'), datetime.datetime.now(), request.GET.get('ei'), request.GET.get('ri'), request.GET.get('durexp'))
+        dt = datetime.timedelta(hours = 8)
+        endtime = datetime.datetime.now()-dt
+        
+        insertHistory(request.GET.get('carid'), request.GET.get('userid'), request.GET.get('si'), 
+            endtime.strftime("%a %b %d %Y %H:%M:%S"), request.GET.get('ei'), request.GET.get('ri'), request.GET.get('durexp'))
         return HttpResponseRedirect("/EVCharge")
 
 def charging(request, car_id, user_id, duration, distance):
@@ -46,12 +51,38 @@ def charging(request, car_id, user_id, duration, distance):
     
     my_car = carCollection.find_one({"carID": car_id})
     
-    train_data = historyCollection.find_one({"carID": car_id, "userID": user_id})
+    X = []
+    Y = []
+    for data in historyCollection.find({"carID": car_id, "userID": user_id}):
+        starttime = str(data['si'])[0:24]
+        endtime = str(data['ti'])[0:24]
+        expect = float(data['duration_exp'])
+        print starttime
+        print endtime
+        print expect
+        stime = datetime.datetime.strptime(starttime, '%a %b %d %Y %H:%M:%S')
+        etime = datetime.datetime.strptime(endtime, '%a %b %d %Y %H:%M:%S')
+        ws = stime.isoweekday()
+        we = etime.isoweekday()
+        ys = stime.year
+        ms = stime.month
+        ds = stime.day
+        hs = stime.hour
+        X.append([expect, ws, ys, ms, ds, hs])
+        Y.append(we)
+    model = train_model(X,Y)
+    curTime = datetime.datetime.now()
+    pre_x = [duration, curTime.isoweekday(), curTime.year, curTime.month, curTime.day, curTime.hour]
+    pre_y = model.predict(pre_x)
+    # train_data = historyCollection.find({"carID": car_id, "userID": user_id})
+    # print train_data
+
     context = {
         'car': my_car,
         'userID': user_id,
         'duration': duration,
         'distance': distance,
+        'prediction': str(pre_y),
     }
     template = loader.get_template('EVCharge/charging.html')
     return HttpResponse(template.render(context, request))
@@ -115,17 +146,9 @@ def insertHistory(carid, userid, si, ti, ei, ri, duration_exp):
     upload_id = carCollection.insert_one(car1).inserted_id
     return upload_id
 
-def train_model(carID):
-    client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
-    db = client['evdb']
-    historyCollection = db['history']
-    
-    train_data = historyCollection.find_one({"carID": carID})
-    
-    print(train_data)
-    print(carID)
-    
+def train_model(X, Y):
     clf = tree.DecisionTreeRegressor(min_samples_leaf=5)
+    clf = clf.fit(X,Y)
     return clf
 
 
