@@ -53,7 +53,8 @@ def charging(request, car_id, user_id, duration, distance):
     
     X = []
     Y = []
-    for data in historyCollection.find({"carID": car_id, "userID": user_id}):
+    cur = historyCollection.find({"carID": car_id, "userID": user_id})
+    for data in cur:
         starttime = str(data['si'])[0:24]
         endtime = str(data['ti'])[0:24]
         expect = float(data['duration_exp'])
@@ -63,17 +64,20 @@ def charging(request, car_id, user_id, duration, distance):
         stime = datetime.datetime.strptime(starttime, '%a %b %d %Y %H:%M:%S')
         etime = datetime.datetime.strptime(endtime, '%a %b %d %Y %H:%M:%S')
         ws = stime.isoweekday()
-        we = etime.isoweekday()
         ys = stime.year
         ms = stime.month
         ds = stime.day
         hs = stime.hour
+        we = (etime-stime).days*24+(etime-stime).seconds/3600
         X.append([expect, ws, ys, ms, ds, hs])
         Y.append(we)
-    model = train_model(X,Y)
-    curTime = datetime.datetime.now()
-    pre_x = [duration, curTime.isoweekday(), curTime.year, curTime.month, curTime.day, curTime.hour]
-    pre_y = model.predict(pre_x)
+    if ((len(Y)>0)and(len(X)>0)):
+        model = train_model(X,Y)
+        curTime = datetime.datetime.now()
+        pre_x = [duration, curTime.isoweekday(), curTime.year, curTime.month, curTime.day, curTime.hour]
+        pre_y = model.predict(pre_x)
+    else: 
+        pre_y = duration
     # train_data = historyCollection.find({"carID": car_id, "userID": user_id})
     # print train_data
 
@@ -88,11 +92,9 @@ def charging(request, car_id, user_id, duration, distance):
     return HttpResponse(template.render(context, request))
  
 def regist(request):
-    client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
-    db = client['evdb']
-    carCollection = db['car']
     print(request.POST.get('fileName'))
     print(request.GET.get('fileName'))
+
     template = loader.get_template('EVCharge/regist.html')
     return HttpResponse(template.render(request))
 
@@ -102,37 +104,45 @@ def upload(request):
     with open('EVCharge'+filepath, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
-
+    print (request.POST.get('carID'))
+    print (request.POST.get('make'))
+    print (request.POST.get('model'))
+    print (request.POST.get('imageLink'))
+    print (request.POST.get('maxRate'))
+    print (request.POST.get('milePerKWh'))
+    if request.POST.get('carID')!=None and request.POST.get('make')!=None and request.POST.get('model')!=None and request.POST.get('maxRate')!=None and request.POST.get('milePerKWh')!=None:
+        temp = insertCar(request.POST.get('carID'), request.POST.get('make'), request.POST.get('model'), request.POST.get('milePerKWh'), request.POST.get('maxRate'), filepath)
+        print temp
     template = loader.get_template('EVCharge/index.html')
-    
     return HttpResponseRedirect("/EVCharge")
 
 # sample data format:
 '''
 carCollection = db['car']
-car1 = {'carID': 'A000001',
-        'make': 'Tesla',
-        'model': 'Model X',
-        'milePerKWh': 3.00,
-        'maxRate': 1.5,
-        'imageLink': '/static/Tesla-Model-X.jpg',
-        'prediction_model': 'clf1',
+{
+    "_id": {
+        "$oid": "56d7e4759d1fa2129ad78250"
+    },
+    "carID": "A000001",
+    "make": "Tesla",
+    "imageLink": "/static/Tesla-Model-X.jpg",
+    "maxRate": 1.5,
+    "model": "Model X",
+    "milePerKWh": 3
 }
 
 historyCollection = db['history']
-history1 = {'carID': 'A000001',
-        'userID': '2017496',
-        'chargeHistory': [{'si': datetime.datetime(2016, 3, 3, 6, 45, 11, 299893)
-                           'ti': datetime.datetime(2016, 3, 3, 11, 45, 11, 299893)
-                           'ei': 10
-                           'ri': 0.667
-                          },
-                          {'si': datetime.datetime(2016, 3, 2, 8, 45, 11, 299893)
-                           'ti': datetime.datetime(2016, 3, 2, 16, 45, 11, 299893)
-                           'ei': 10
-                           'ri': 0.42
-                          },
-                         ]     
+{
+    "_id": {
+        "$oid": "56dd3b759d1fa21095034429"
+    },
+    "carID": "A000003",
+    "userID": "2017000",
+    "si": "Mon Mar 07 2016 00:27:26 GMT-0800 (PST)",
+    "ti": "Mon Mar 07 2016 00:27:33",
+    "ei": "1",
+    "duration_exp": "1",
+    "ri": "1.5"
 }
 
 '''
@@ -146,7 +156,6 @@ def populate():
         'milePerKWh': 3.00,
         'maxRate': 1.5,
         'imageLink': '/static/Tesla-Model-S1.jpg',
-        'prediction_model': trainmodel('A000001'),
         }
     uoload_id = carCollection.insert_one(car1).inserted_id
 
@@ -162,6 +171,21 @@ def insertHistory(carid, userid, si, ti, ei, ri, duration_exp):
         'ri': ri,
         'duration_exp': duration_exp,
         }
+    upload_id = carCollection.insert_one(car1).inserted_id
+    return upload_id
+
+def insertCar(carid, make, model, mpk, maxrate, imageLink):
+    client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
+    db = client['evdb']
+    carCollection = db['car']
+    car1 = {
+        'carID':carid,
+        'make':make,
+        'model':model,
+        'imageLink':imageLink,
+        'maxRate':maxrate,
+        'milePerKWh':mpk,
+    }
     upload_id = carCollection.insert_one(car1).inserted_id
     return upload_id
 
