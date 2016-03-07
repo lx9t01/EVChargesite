@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^EVCharge/', include('EVCharge.urls')),
+    # url(r'^regist/', include('regist.urls')),
     url(r'^admin/', admin.site.urls),
 ]

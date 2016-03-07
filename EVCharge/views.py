@@ -86,7 +86,15 @@ def charging(request, car_id, user_id, duration, distance):
     }
     template = loader.get_template('EVCharge/charging.html')
     return HttpResponse(template.render(context, request))
-    
+ 
+def regist(request):
+    client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
+    db = client['evdb']
+    carCollection = db['car']
+
+    template = loader.get_template('EVCharge/regist.html')
+    return HttpResponse(template.render(request))
+
     
 # sample data format:
 '''

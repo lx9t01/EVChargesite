@@ -20,7 +20,7 @@
 	#section {
 		width:auto;
     	float:left;
-    	text-align:center;
+    	text-align:left;
     	padding:10px;	 	 
 	}
 	#footer {
@@ -36,18 +36,29 @@
 <body>
 <div id="header">
 	<h1>Welcome to Electrical Vehicle Charging Station!</h1>
+	<h3>Sign up</h3>
 </div>
 
 <div id="nav">
-	<a href="">Setting</a><br>
-	<a href="/EVCharge/regist">Register</a><br>
-	<a href="">Back</a><br>
+	<a href="../">Setting</a><br>
+	<a href="">Register</a><br>
+	<a href="../">Back</a><br>
 </div>
 
 <div id="section">
-	<h3>Please input your car ID: <br></h3>
-	<textarea rows="1" cols="50" id="carid"></textarea><br>
-	<button type="button" onclick="javascript:location.href = 'ev/'+document.getElementById('carid').value">Enter</button>
+	<h3>Basic information: </h3>
+	<p>Car ID: <textarea rows="1" cols="10" id = "carID"></textarea></p>
+	<p>Make: <textarea rows="1" cols="10" id="make"></textarea></p>
+	<p>Model: <textarea rows="1" cols="10" id="model"></textarea></p>
+	<p>Please upload a photo: <textarea rows="1" cols="10" id="distance"></textarea></p>
+	<h3>Detailed information of the car:</h3>
+	<p>Max charge rate: <textarea rows="1" cols="10" id = "maxRate"></textarea></p>
+	<p>Mile per kWh: <textarea rows="1" cols="10" id = "milePerKWh"></textarea></p>
+	<button type="button" onclick="">Sign up</button>
+
+	<script>
+	</script>
+
 
 </div>
 
