@@ -31,6 +31,48 @@
    		padding:5px;	 	 
 	}
 	</style>
+	<script>  
+    function uploadAndSubmit() { 
+        var form = document.forms["demoForm"]; 
+    
+        if (form["file"].files.length > 0) { 
+ // 寻找表单域中的 <input type="file" ... /> 标签
+        var file = form["file"].files[0]; 
+ // try sending 
+        var reader = new FileReader(); 
+
+        reader.onload = function() { 
+    // 这个事件在读取成功结束后触发
+            console.log("load complete"); 
+        } 
+
+        reader.onloadend = function() { 
+    // 这个事件在读取结束后，无论成功或者失败都会触发
+            if (reader.error) { 
+                console.log(reader.error); 
+            } else { 
+ // 构造 XMLHttpRequest 对象，发送文件 Binary 数据
+                var xhr = new XMLHttpRequest(); 
+                xhr.open("POST", "upload.jsp?fileName=" + file.name); 
+                xhr.overrideMimeType("application/octet-stream"); 
+                xhr.sendAsBinary(reader.result); 
+                xhr.onreadystatechange = function() { 
+                    if (xhr.readyState == 4) { 
+                        if (xhr.status == 200) { 
+                        console.log("upload complete"); 
+                        console.log("response: " + xhr.responseText); 
+                    } 
+                } 
+            } 
+        } 
+    } 
+
+    reader.readAsBinaryString(file); 
+    } else { 
+        alert ("Please choose a file."); 
+    } 
+}
+</script> 
 </head>
 
 <body>
@@ -46,18 +88,20 @@
 </div>
 
 <div id="section">
+	<form name="demoForm" method="post" enctype="multipart/form-data" action="/EVCharge/upload/"> 
+    {% csrf_token %}
 	<h3>Basic information: </h3>
-	<p>Car ID: <textarea rows="1" cols="10" id = "carID"></textarea></p>
-	<p>Make: <textarea rows="1" cols="10" id="make"></textarea></p>
-	<p>Model: <textarea rows="1" cols="10" id="model"></textarea></p>
-	<p>Please upload a photo: <textarea rows="1" cols="10" id="distance"></textarea></p>
+	<p>Car ID: <input type="text" rows="1" cols="10" id = "carID" name="carID"></p>
+	<p>Make: <input type="text" rows="1" cols="10" id="make" name="make"></textarea></p>
+	<p>Model: <input type="text" rows="1" cols="10" id="model" name="model"></textarea></p>
+	<p>Please upload a photo: <input id="fileSelect" type="file" name="fileSelect" />  </p>
+	<p>
 	<h3>Detailed information of the car:</h3>
-	<p>Max charge rate: <textarea rows="1" cols="10" id = "maxRate"></textarea></p>
-	<p>Mile per kWh: <textarea rows="1" cols="10" id = "milePerKWh"></textarea></p>
-	<button type="button" onclick="">Sign up</button>
-
-	<script>
-	</script>
+	<p>Max charge rate: <input type="text" rows="1" cols="10" id = "maxRate" name="maxRate"></p>
+	<p>Mile per kWh: <input type="text" rows="1" cols="10" id = "milePerKWh" name="milePerKWh"></p>
+	<p><input type="submit" value="Sign up"></p>
+    <input type='hidden' name='csrfmiddlewaretoken' value='sdsdfsstrefdwasd' />
+    </form>
 
 
 </div>

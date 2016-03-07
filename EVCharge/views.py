@@ -91,11 +91,22 @@ def regist(request):
     client = MongoClient('mongodb://ev_user:ee135@ds064188.mlab.com:64188/evdb')
     db = client['evdb']
     carCollection = db['car']
-
+    print(request.POST.get('fileName'))
+    print(request.GET.get('fileName'))
     template = loader.get_template('EVCharge/regist.html')
     return HttpResponse(template.render(request))
 
+def upload(request):
+    f=request.FILES['fileSelect']
+    filepath = '/static/'+request.POST.get('make')+'_'+request.POST.get('model')+'.jpg'
+    with open('EVCharge'+filepath, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+    template = loader.get_template('EVCharge/index.html')
     
+    return HttpResponse(template.render(request))
+
 # sample data format:
 '''
 carCollection = db['car']
