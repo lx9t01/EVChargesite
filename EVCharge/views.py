@@ -105,7 +105,7 @@ def upload(request):
 
     template = loader.get_template('EVCharge/index.html')
     
-    return HttpResponse(template.render(request))
+    return HttpResponseRedirect("/EVCharge")
 
 # sample data format:
 '''
