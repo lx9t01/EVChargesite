@@ -29,5 +29,14 @@ Charging is the site where we set all the parameters and the charge begins.
 
 ## Other supporting systems: 
 * Machine learning algorithm to train on history data;
-* rRegistration page for new EVs.
+* Registration page for new EVs.
+
+#### Registration: 
+The registration system supports: 
+* car ID
+* Make
+* Model
+* Image Link
+* max charge rate
+* mile per kWh
 
