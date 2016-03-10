@@ -85,7 +85,7 @@ def charging(request, car_id, user_id, duration, distance):
         'car': my_car,
         'userID': user_id,
         'duration': duration,
-        'distance': float(distance)/mpk,
+        'distance': float(distance)/float(mpk),
         'prediction': str(pre_y),
     }
     template = loader.get_template('EVCharge/charging.html')
