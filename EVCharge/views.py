@@ -50,7 +50,7 @@ def charging(request, car_id, user_id, duration, distance):
     historyCollection = db['history']
     
     my_car = carCollection.find_one({"carID": car_id})
-    
+    mpk = my_car['milePerKWh']
     X = []
     Y = []
     cur = historyCollection.find({"carID": car_id, "userID": user_id})
@@ -85,7 +85,7 @@ def charging(request, car_id, user_id, duration, distance):
         'car': my_car,
         'userID': user_id,
         'duration': duration,
-        'distance': distance,
+        'distance': float(distance)/mpk,
         'prediction': str(pre_y),
     }
     template = loader.get_template('EVCharge/charging.html')

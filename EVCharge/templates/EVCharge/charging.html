@@ -49,9 +49,9 @@
 	<img src="/static/charging.png" alt="EV is charging..." style="width:128px;height:128px;"></img><br>
 	<p>Your charge starts at: </p>
 	<p id = 'now'></p>
-	<p>Expected duration of stay: {{duration}}</p>
-	<p>Expected travel distance: {{distance}}</p>
-	<p>The predicted charge duration: {{prediction}}</p>
+	<p>Expected duration of stay: {{duration}} hours</p>
+	<p>Expected charge energy: {{distance}} kWh</p>
+	<p>The predicted charge duration: {{prediction}} hours</p>
 	<form action="/EVCharge/processing" method="get">
       <input type="hidden" name="carid", value={{car.carID}}>
       <input type="hidden" name="userid" value={{userID}}>
